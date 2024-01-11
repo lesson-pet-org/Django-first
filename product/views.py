@@ -100,7 +100,10 @@ class CreateProduct(View):
             prod_obj.save()
             if product_form_img.is_valid():
                 product_obj_img = product_form_img.save(commit=False)
-                product_obj_img.img = product_form_img.cleaned_data['img']
+                if product_form_img.cleaned_data['img'] is None:
+                    product_obj_img.img = "default_images/default_image.jpeg"
+                else:
+                    product_obj_img.img = product_form_img.cleaned_data['img']
                 product_obj_img.product_obj = prod_obj
                 product_obj_img.save()
                 return redirect('home')
