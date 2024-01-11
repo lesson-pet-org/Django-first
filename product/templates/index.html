@@ -1,0 +1,27 @@
+{%extends 'base.html'%}
+{%block main_page%}
+  <div class="card-group">
+    {%for product in list_product%}
+      <div class="card" style="width: 10rem;">
+        <div height="100px" width="100px">
+          <img src="{{product.image.url}}" class="card-img-top" alt="привет">
+        </div>
+          <div class="card-body">
+            <h5 class="card-title">{{product.name}}</h5>
+            <p class="card-text">{{product.description}}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <a class="list-group-item" href="{% url 'product_detail' product.pk%}">Подробнее</a>
+            <a class="list-group-item" href="{%url 'delete_product' product.pk%}" >Удалить</a>
+            <a class="list-group-item" href="{%url 'updete_product' product.pk%}" >Обновить</a>
+          </ul>
+          <div class="card-body">
+          <p>{{product.price}} руб.</p>
+          </div>
+      </div>
+    {%endfor%}
+  </div>
+  <br>
+  <a class="btn btn-primary" style="background-color:#c14c7f ;" href="{%url 'create_product'%}">Создать</a>
+    
+{%endblock%}
