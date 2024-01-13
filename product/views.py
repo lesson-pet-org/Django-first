@@ -40,7 +40,6 @@ class DeleteProductView(View):
 class UpdeteProductView(View):
     def get(self, request, *args, **kwargs):
         product = Product.objects.get(id=kwargs['pk'])
-        image_product_obj = product.prod_img.all()[0]
         product_form = ProductForm(
             initial={
                 'name': product.name,
@@ -48,11 +47,15 @@ class UpdeteProductView(View):
                 'price': product.price
             }
         )
-        product_form_img = ProductImageForm(
-            initial={
-                'img': image_product_obj.img
-            }
-        )
+        if len(product.prod_img.all()) == 0:
+            product_form_img = ProductImageForm()
+        else:
+            image_product_obj = product.prod_img.all()[0]
+            product_form_img = ProductImageForm(
+                initial={
+                    'img': image_product_obj.img
+                }
+            )
         context = {
             'form': product_form,
             'product': product,
@@ -64,16 +67,27 @@ class UpdeteProductView(View):
         product = Product.objects.get(id=kwargs['pk'])
         product_form = ProductForm(request.POST, request.FILES)
         product_form_img = ProductImageForm(request.POST, request.FILES)
-        image_product_obj = product.prod_img.all()[0]
+        
         if product_form.is_valid():
             product.name = product_form.cleaned_data['name']
             product.description = product_form.cleaned_data['description']
             product.price = product_form.cleaned_data['price']
             product.save()
             if product_form_img.is_valid():
-                image_product_obj.img = product_form_img.cleaned_data['img']
-                image_product_obj.save()
-                return redirect('home')
+                if len(product.prod_img.all()) == 0:
+                    image_product_obj = product_form_img.save(commit=False)
+                    image_product_obj.img = "default_images/default_image.jpeg"
+                    image_product_obj.product_obj = product
+                    image_product_obj.save()
+                    return redirect('home')
+                else:
+                    image_product_obj = product.prod_img.all()[0]
+                    if product_form_img.cleaned_data['img'] is False:
+                        image_product_obj.img = "default_images/default_image.jpeg"
+                    else:
+                        image_product_obj.img = product_form_img.cleaned_data['img']
+                    image_product_obj.save()
+                    return redirect('home')
 
 
 
