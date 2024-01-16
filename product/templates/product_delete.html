@@ -4,5 +4,7 @@
   <form method="post">
     {%csrf_token%}
     <button type='submit'>Удалить</button>
+    <a class="list-group-item btn btn-primary" type="button" href="{% url 'home'%}">НЕТ!</a>
   </form>
+
 {%endblock%}

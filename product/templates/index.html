@@ -12,10 +12,7 @@
           </div>
           <ul class="list-group list-group-flush">
             <a class="list-group-item" href="{% url 'product_detail' product.pk%}">Подробнее</a>
-            <form method="post" action="{%url 'delete_product' product.pk%}">
-              {%csrf_token%}
-              <button type='submit'>Удалить</button>
-            </form>
+            <a class="list-group-item" href="{%url 'delete_product' product.pk%}" >Удалить</a>
             <a class="list-group-item" href="{%url 'updete_product' product.pk%}" >Обновить</a>
           </ul>
           <div class="card-body">
